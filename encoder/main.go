@@ -1,7 +1,15 @@
 package main
 
-import log "github.com/sirupsen/logrus"
+import (
+	v "encoder/domain"
 
-func main()  {
-	log.Info("Testando a package github.com/sirupsen/logrus")
+	log "github.com/sirupsen/logrus"
+)
+
+func main() {
+	var video v.Video
+	data := []byte("{\"uuid\":\"abcd1234\",\"path\":\"convite.mp4\",\"status\":\"Pending\"}")
+	video.Unmarshal(data)
+	log.Info(video.Status)
+
 }
