@@ -12,6 +12,7 @@ func main() {
 	video.Unmarshal(data)
 	video.Dowloand("codeeducation-test", "/tmp")
 	video.Fragment("/tmp")
+	video.Encode("/tmp")
 	log.Info(video.Path)
 
 }

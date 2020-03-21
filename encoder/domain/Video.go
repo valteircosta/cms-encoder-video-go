@@ -104,3 +104,21 @@ func printOutput(out []byte) {
 		fmt.Printf("===> Output %s\n", string(out))
 	}
 }
+func (video *Video) Encode(storedPath string) Video {
+	cmdArgs := []string{}
+	cmdArgs = append(cmdArgs, storedPath+"/"+video.Uuid+".frag")
+	cmdArgs = append(cmdArgs, "--use-segment-timeline")
+	cmdArgs = append(cmdArgs, "-o")
+	cmdArgs = append(cmdArgs, storedPath+"/"+video.Uuid)
+	cmdArgs = append(cmdArgs, "-f")
+	cmdArgs = append(cmdArgs, "--exec-dir")
+	cmdArgs = append(cmdArgs, "/usr/local/bin")
+	cmd := exec.Command("mp4dash", cmdArgs...)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		video.Status = "Error"
+		fmt.Println(err.Error())
+	}
+	printOutput(output)
+	return *video
+}
