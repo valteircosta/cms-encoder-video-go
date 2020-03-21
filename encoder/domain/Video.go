@@ -56,8 +56,8 @@ func (video *Video) Dowloand(bucketName string, storagePath string) (Video, erro
 		return *video, err
 	}
 
-	f, err := os.Create(storagePath + "/" + video.Uuid + ".mp4'')
-	
+	f, err := os.Create(storagePath + "/" + video.Uuid + ".mp4")
+
 	if err != nil {
 		video.Status = "Error"
 		fmt.Println(err.Error())
@@ -101,6 +101,6 @@ func (video *Video) Fragment(storedPath string) Video {
 }
 func printOutput(out []byte) {
 	if len(out) > 0 {
-		fmt.Println("===> Output %s\n", string(out))
+		fmt.Printf("===> Output %s\n", string(out))
 	}
 }
