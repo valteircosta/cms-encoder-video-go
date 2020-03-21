@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 
 	"cloud.google.com/go/storage"
 )
@@ -55,7 +56,7 @@ func (video *Video) Dowloand(bucketName string, storagePath string) (Video, erro
 		return *video, err
 	}
 
-	f, err := os.Create(storagePath + "/" + video.Path + ".mp4")
+	f, err := os.Create(storagePath + "/" + video.Uuid + ".mp4")
 	if err != nil {
 		video.Status = "Error"
 		fmt.Println(err.Error())
@@ -75,4 +76,30 @@ func (video *Video) Dowloand(bucketName string, storagePath string) (Video, erro
 
 	return *video, nil
 
+}
+func (video *Video) Fragment(storedPath string) Video {
+
+	err := os.Mkdir(storedPath+"/"+video.Uuid, os.ModePerm)
+	if err != nil {
+		video.Status = "Error"
+		fmt.Println(err.Error())
+	}
+	fmt.Println("Make fragment " + video.Uuid)
+	// Origem e destino
+	source := storedPath + "/" + video.Uuid + ".mp4"
+	target := storedPath + "/" + video.Uuid + ".frag"
+	// Comando de fragmentação
+	cmd := exec.Command("mp4fragment", source, target)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		video.Status = "Error"
+		fmt.Println(err.Error())
+	}
+	printOutput(output)
+	return *video
+}
+func printOutput(out []byte) {
+	if len(out) > 0 {
+		fmt.Println("===> Output %s\n", string(out))
+	}
 }
