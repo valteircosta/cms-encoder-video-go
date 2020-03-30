@@ -105,8 +105,8 @@ func printOutput(out []byte) {
 	}
 }
 func (video *Video) Encode(storedPath string) Video {
-	cmdArgs := []string{}
 	cmdArgs = append(cmdArgs, storedPath+"/"+video.Uuid+".frag")
+	cmdArgs := []string{}
 	cmdArgs = append(cmdArgs, "--use-segment-timeline")
 	cmdArgs = append(cmdArgs, "-o")
 	cmdArgs = append(cmdArgs, storedPath+"/"+video.Uuid)
