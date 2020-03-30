@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -124,6 +125,11 @@ func (video *Video) Encode(storedPath string) Video {
 	printOutput(output)
 	return *video
 }
+
+/**
+Realiza o upload de uma única parte do video/objeto
+**/
+
 func (video *Video) UploadObject(completePath string, storagePath string, bucketName string, client *storage.Client, ctx context.Context) error {
 	path := strings.Split(completePath, storagePath+"/")
 
@@ -134,8 +140,13 @@ func (video *Video) UploadObject(completePath string, storagePath string, bucket
 	}
 	defer f.Close()
 	wc := client.Bucket(bucketName).Object(path[1]).NewWriter(ctx)
-	wc.ACL := []storage.ACLRule
+	wc.ACL = []storage.ACLRule{{Entity: storage.AllUsers, Role: storage.RoleReader}}
 
-	## visto até  o minuto 7 do video
-
+	if _, err := io.Copy(wc, f); err != nil {
+		return err
+	}
+	if err := wc.Close(); err != nil {
+		return err
+	}
+	return nil
 }
