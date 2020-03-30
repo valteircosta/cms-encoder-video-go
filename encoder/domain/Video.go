@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strings"
 
 	"cloud.google.com/go/storage"
 )
@@ -105,8 +106,9 @@ func printOutput(out []byte) {
 	}
 }
 func (video *Video) Encode(storedPath string) Video {
-	cmdArgs = append(cmdArgs, storedPath+"/"+video.Uuid+".frag")
+
 	cmdArgs := []string{}
+	cmdArgs = append(cmdArgs, storedPath+"/"+video.Uuid+".frag")
 	cmdArgs = append(cmdArgs, "--use-segment-timeline")
 	cmdArgs = append(cmdArgs, "-o")
 	cmdArgs = append(cmdArgs, storedPath+"/"+video.Uuid)
@@ -121,4 +123,19 @@ func (video *Video) Encode(storedPath string) Video {
 	}
 	printOutput(output)
 	return *video
+}
+func (video *Video) UploadObject(completePath string, storagePath string, bucketName string, client *storage.Client, ctx context.Context) error {
+	path := strings.Split(completePath, storagePath+"/")
+
+	f, err := os.Open(completePath)
+	if err != nil {
+		fmt.Println("Error during the upload", err.Error())
+		return err
+	}
+	defer f.Close()
+	wc := client.Bucket(bucketName).Object(path[1]).NewWriter(ctx)
+	wc.ACL := []storage.ACLRule
+
+	## visto até  o minuto 7 do video
+
 }
