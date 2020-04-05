@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"cloud.google.com/go/storage"
@@ -108,6 +109,8 @@ func printOutput(out []byte) {
 }
 func (video *Video) Encode(storedPath string) Video {
 
+	fmt.Println("Make encoding video ", video.Uuid)
+
 	cmdArgs := []string{}
 	cmdArgs = append(cmdArgs, storedPath+"/"+video.Uuid+".frag")
 	cmdArgs = append(cmdArgs, "--use-segment-timeline")
@@ -126,9 +129,25 @@ func (video *Video) Encode(storedPath string) Video {
 	return *video
 }
 
-/**
-Realiza o upload de uma única parte do video/objeto
-**/
+/** Remove o arquivo **/
+func (video *Video) Finish(storedPath string) {
+	err := os.Remove(storedPath + "/" + video.Uuid + ".mp4")
+	if err != nil {
+		fmt.Println("Error removing MP4 ", video.Uuid, ".mp4")
+	}
+	err = os.Remove(storedPath + "/" + video.Uuid + ".frag")
+	if err != nil {
+		fmt.Println("Error removing Frag ", video.Uuid, ".frag")
+	}
+	err = os.RemoveAll(storedPath + "/" + video.Uuid)
+	if err != nil {
+		fmt.Println("Error removing folger ", video.Path)
+	}
+
+	fmt.Println("Files has been removed", video.Uuid)
+}
+
+/** Realiza o upload de uma única parte do video **/
 
 func (video *Video) UploadObject(completePath string, storagePath string, bucketName string, client *storage.Client, ctx context.Context) error {
 	path := strings.Split(completePath, storagePath+"/")
@@ -149,4 +168,14 @@ func (video *Video) UploadObject(completePath string, storagePath string, bucket
 		return err
 	}
 	return nil
+}
+
+func (video *Video) GetVideoPaths() []string {
+	var paths []string
+	filepath.Walk("/tmp/"+video.Uuid, func(path string, info os.FileInfo, err error) error {
+		paths = append(paths, path)
+		return nil
+	})
+	return paths
+
 }
