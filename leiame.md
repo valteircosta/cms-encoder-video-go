@@ -1,5 +1,6 @@
 ## Anotações importantes projeto GO
 
+Iniciar o docker ' docker-compose up -d '
 Utilitário 'go mod' gerenciador de pacotes go
 iniciano $go mod init package-name
 executando $go run file_name.go

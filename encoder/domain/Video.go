@@ -4,9 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"strings"
 
 	"cloud.google.com/go/storage"
 )
@@ -105,6 +108,9 @@ func printOutput(out []byte) {
 	}
 }
 func (video *Video) Encode(storedPath string) Video {
+
+	fmt.Println("Make encoding video ", video.Uuid)
+
 	cmdArgs := []string{}
 	cmdArgs = append(cmdArgs, storedPath+"/"+video.Uuid+".frag")
 	cmdArgs = append(cmdArgs, "--use-segment-timeline")
@@ -121,4 +127,55 @@ func (video *Video) Encode(storedPath string) Video {
 	}
 	printOutput(output)
 	return *video
+}
+
+/** Remove o arquivo **/
+func (video *Video) Finish(storedPath string) {
+	err := os.Remove(storedPath + "/" + video.Uuid + ".mp4")
+	if err != nil {
+		fmt.Println("Error removing MP4 ", video.Uuid, ".mp4")
+	}
+	err = os.Remove(storedPath + "/" + video.Uuid + ".frag")
+	if err != nil {
+		fmt.Println("Error removing Frag ", video.Uuid, ".frag")
+	}
+	err = os.RemoveAll(storedPath + "/" + video.Uuid)
+	if err != nil {
+		fmt.Println("Error removing folger ", video.Path)
+	}
+
+	fmt.Println("Files has been removed", video.Uuid)
+}
+
+/** Realiza o upload de uma única parte do video **/
+
+func (video *Video) UploadObject(completePath string, storagePath string, bucketName string, client *storage.Client, ctx context.Context) error {
+	path := strings.Split(completePath, storagePath+"/")
+
+	f, err := os.Open(completePath)
+	if err != nil {
+		fmt.Println("Error during the upload", err.Error())
+		return err
+	}
+	defer f.Close()
+	wc := client.Bucket(bucketName).Object(path[1]).NewWriter(ctx)
+	wc.ACL = []storage.ACLRule{{Entity: storage.AllUsers, Role: storage.RoleReader}}
+
+	if _, err := io.Copy(wc, f); err != nil {
+		return err
+	}
+	if err := wc.Close(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (video *Video) GetVideoPaths() []string {
+	var paths []string
+	filepath.Walk("/tmp/"+video.Uuid, func(path string, info os.FileInfo, err error) error {
+		paths = append(paths, path)
+		return nil
+	})
+	return paths
+
 }
