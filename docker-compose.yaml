@@ -1,7 +1,8 @@
-version: '3'
+version: "3"
 
-services: 
+services:
   app:
     build: .
+    container_name: "cms-code-micro-encoder-video"
     volumes:
       - .:/go/src/
