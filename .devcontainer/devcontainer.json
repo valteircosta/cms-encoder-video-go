@@ -32,7 +32,7 @@
 		"vector-of-bool.gitflow",
 		"donjayamanne.git-extension-pack",
 		"donjayamanne.githistory",
-		"tabnine.tabnine-vscode"
+		"kiteco.kite"
 	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
