@@ -32,7 +32,8 @@
 		"vector-of-bool.gitflow",
 		"donjayamanne.git-extension-pack",
 		"donjayamanne.githistory",
-		"kiteco.kite"
+		"kiteco.kite",
+		"premparihar.gotestexplorer"
 	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
