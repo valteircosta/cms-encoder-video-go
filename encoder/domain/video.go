@@ -13,6 +13,9 @@ type Video struct {
 	CreatedAt  time.Time `valid:"-"` ///não valida
 }
 
+func init() {
+	govalidator.SetFieldsRequiredByDefault(true)
+}
 func NewVideo() *Video {
 	return &Video{}
 }
