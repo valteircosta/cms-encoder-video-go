@@ -29,7 +29,10 @@
 		"golang.go",
 		"eamodio.gitlens",
 		"github.vscode-pull-request-github",
-		"vector-of-bool.gitflow"
+		"vector-of-bool.gitflow",
+		"donjayamanne.git-extension-pack",
+		"donjayamanne.githistory",
+		"tabnine.tabnine-vscode"
 	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
