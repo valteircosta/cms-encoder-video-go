@@ -33,7 +33,8 @@
 		"donjayamanne.git-extension-pack",
 		"donjayamanne.githistory",
 		"kiteco.kite",
-		"premparihar.gotestexplorer"
+		"premparihar.gotestexplorer",
+		"mrmlnc.vscode-duplicate"
 	]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
