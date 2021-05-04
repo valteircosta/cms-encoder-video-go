@@ -10,8 +10,8 @@ type Video struct {
 	ID         string    `json:"encoded_video_folder" valid:"uuid" gorm:"type:uuid;primary_key"`
 	ResourceID string    `json:"resouce_id" valid:"notnull" gorm:"type:varchar(255)"`
 	FilePath   string    `json:"file_path" valid:"notnull" gorm:"type:varchar(255)"`
-	CreatedAt  time.Time `json:"_" valid:"-"`                              ///não valida
-	Jobs       []*Job    `json:"-" valid:"jobs" gorm:"ForeignKey:VideoID"` //Slice de jobs - FK VideoID
+	CreatedAt  time.Time `json:"_" valid:"-"`                           ///não valida
+	Jobs       []*Job    `json:"-" valid:"-" gorm:"ForeignKey:VideoID"` //Slice de jobs - FK VideoID
 }
 
 func init() {
