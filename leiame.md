@@ -8,6 +8,6 @@ Aplications -> Camada que utiliza o Domain e Framework para realizar as tarefas 
 Iniciar o docker ' docker-compose up -d '
 Utilitário 'go mod' gerenciador de pacotes go
 iniciano $go mod init package-name
-executando $go run file_name.go
+executando $go run path/file_name.go
 Adicionar a credencial
 export GOOGLE_APPLICATION_CREDENTIALS="/go/src/codeeducation-test-260423-7501a56d1b0e.json"
